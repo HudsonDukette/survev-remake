@@ -13,11 +13,12 @@ async function main(): Promise<void> {
 
   const renderer = new GameRenderer();
   const input = new InputManager();
-  const simulation = new GameSimulation(WORLD_PROPS);
+  const collisionGeometry = WORLD_PROPS.flatMap((prop) => prop.collision ? [prop.collision] : []);
+  const simulation = new GameSimulation(collisionGeometry);
   const loop = new FixedStepLoop();
   await renderer.init(canvas, WORLD_PROPS);
   input.attach();
-  status.textContent = 'MILESTONE 2 · COLLISION ONLINE';
+  status.textContent = 'MILESTONE 2 · WORLD ONLINE';
 
   let previous = performance.now();
   let lastHudUpdate = 0;
