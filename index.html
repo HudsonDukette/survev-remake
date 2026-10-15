@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17231b" />
+    <meta name="description" content="A browser-based top-down battle royale prototype." />
+    <title>Island Royale — Development Build</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="game-shell">
+        <canvas id="game-canvas" aria-label="Island Royale game view"></canvas>
+        <div id="hud">
+          <div class="hud-pill"><span class="status-dot"></span><span id="status">BOOTING</span></div>
+          <div class="hud-help">WASD / arrows to move · Mouse aiming arrives in milestone 2</div>
+          <div class="hud-coordinate" id="coordinates">WORLD 0, 0</div>
+        </div>
+      </div>
+      <section id="startup-error" hidden><h1>Game failed to start</h1><p id="startup-error-message"></p><p>Open the browser console for details.</p></section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
