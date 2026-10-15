@@ -20,15 +20,24 @@ function validateRadius(radius: number): void {
   }
 }
 
-/** Exact circle-vs-axis-aligned-rectangle overlap test, including edge contact. */
-export function circleIntersectsAabb(center: Vector2, radius: number, rect: Aabb): boolean {
-  validateRadius(radius);
-  validateRect(rect);
+function squaredDistanceToRect(center: Vector2, rect: Aabb): number {
   const nearestX = Math.max(rect.x, Math.min(center.x, rect.x + rect.width));
   const nearestY = Math.max(rect.y, Math.min(center.y, rect.y + rect.height));
   const dx = center.x - nearestX;
   const dy = center.y - nearestY;
-  return dx * dx + dy * dy <= radius * radius;
+  return dx * dx + dy * dy;
+}
+
+/** Exact circle-vs-axis-aligned-rectangle contact test, including edge contact. */
+export function circleIntersectsAabb(center: Vector2, radius: number, rect: Aabb): boolean {
+  validateRadius(radius);
+  validateRect(rect);
+  return squaredDistanceToRect(center, rect) <= radius * radius;
+}
+
+function circlePenetratesAabb(center: Vector2, radius: number, rect: Aabb): boolean {
+  // A tangent circle may slide along a wall; only penetration blocks the candidate step.
+  return squaredDistanceToRect(center, rect) < radius * radius - 1e-9;
 }
 
 /**
@@ -45,7 +54,7 @@ export function moveCircle(
 ): Vector2 {
   validateRadius(radius);
   for (const obstacle of obstacles) validateRect(obstacle);
-  if (obstacles.some((obstacle) => circleIntersectsAabb(start, radius, obstacle))) {
+  if (obstacles.some((obstacle) => circlePenetratesAabb(start, radius, obstacle))) {
     return vec2(start.x, start.y);
   }
 
@@ -58,11 +67,11 @@ export function moveCircle(
 
   for (let i = 0; i < steps; i += 1) {
     const nextX = vec2(position.x + stepX, position.y);
-    if (!obstacles.some((obstacle) => circleIntersectsAabb(nextX, radius, obstacle))) {
+    if (!obstacles.some((obstacle) => circlePenetratesAabb(nextX, radius, obstacle))) {
       position = nextX;
     }
     const nextY = vec2(position.x, position.y + stepY);
-    if (!obstacles.some((obstacle) => circleIntersectsAabb(nextY, radius, obstacle))) {
+    if (!obstacles.some((obstacle) => circlePenetratesAabb(nextY, radius, obstacle))) {
       position = nextY;
     }
   }
