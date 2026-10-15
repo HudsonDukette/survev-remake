@@ -1,4 +1,4 @@
-import { normalize, scale, vec2, type Vector2 } from './Vector2';
+import { normalize, vec2, type Vector2 } from './Vector2';
 import type { InputManager } from '../input/InputManager';
 export const PLAYER_SPEED = 180;
 export class GameSimulation {
