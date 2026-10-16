@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#17231b" />
-    <meta name="description" content="A browser-based top-down battle royale prototype." />
+    <meta name="theme-color" content="#80af49" />
+    <meta name="description" content="Island Royale — a top-down island survival game prototype." />
     <title>Island Royale — Development Build</title>
   </head>
   <body>
@@ -12,10 +12,32 @@
       <div id="game-shell">
         <canvas id="game-canvas" aria-label="Island Royale game view"></canvas>
         <div id="hud">
-          <div class="hud-pill"><span class="status-dot"></span><span id="status">BOOTING</span></div>
-          <div class="hud-help">WASD / arrows to move · Mouse aiming arrives in milestone 2</div>
+          <div class="hud-pill"><span class="status-dot"></span><span id="status" aria-live="polite">BOOTING</span></div>
+          <div class="hud-help">WASD / arrows to move · Hide under tree canopies</div>
           <div class="hud-coordinate" id="coordinates">WORLD 0, 0</div>
         </div>
+        <section id="start-screen" aria-labelledby="menu-title">
+          <div class="menu-layout">
+            <div class="menu-main">
+              <div class="menu-kicker">Local field test · 0.2</div>
+              <h1 id="menu-title">ISLAND<br /><span>ROYALE</span></h1>
+              <p class="menu-subtitle">Drop into the island, find your way through the trees, and explore the terrain.</p>
+              <div class="menu-actions">
+                <button class="menu-button" id="play-button" type="button">ENTER THE ISLAND &nbsp; ›</button>
+                <button class="menu-button secondary" id="how-to-button" type="button" aria-expanded="false" aria-controls="how-to-panel">HOW TO PLAY</button>
+              </div>
+              <p class="menu-footnote">A work-in-progress browser game. Combat and online multiplayer are not available yet.</p>
+            </div>
+            <aside class="menu-side" aria-label="Island field notes">
+              <p class="side-label">Field notes</p>
+              <div class="field-note"><span class="field-note-mark"></span><div><strong>Watch the treeline</strong><span>Canopies fade while you stand underneath them.</span></div></div>
+              <div class="field-note"><span class="field-note-mark"></span><div><strong>Solid terrain</strong><span>Tree trunks and rocks block your path.</span></div></div>
+              <div class="field-note"><span class="field-note-mark"></span><div><strong>Move freely</strong><span>Low bushes are decorative and can be walked through.</span></div></div>
+              <div id="how-to-panel" hidden><strong>Controls</strong><br />W A S D or the arrow keys to move. Diagonal movement is normalized. Walk around rocks and trunks; the camera follows your character.</div>
+              <div class="menu-build"><span>Island Royale</span><span>Prototype 0.2</span></div>
+            </aside>
+          </div>
+        </section>
       </div>
       <section id="startup-error" hidden><h1>Game failed to start</h1><p id="startup-error-message"></p><p>Open the browser console for details.</p></section>
     </div>
