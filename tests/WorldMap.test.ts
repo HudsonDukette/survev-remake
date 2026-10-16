@@ -6,11 +6,12 @@ describe('WorldMap', () => {
     expect(createWorldProps()).toEqual(createWorldProps());
   });
 
-  it('contains a mix of trees, rocks, and passable bushes', () => {
+  it('includes a mix of trees, rocks, passable bushes, barrels, and crates', () => {
     const props = createWorldProps();
-    expect(props.length).toBeGreaterThan(80);
-    expect(props.some((prop) => prop.kind === 'tree')).toBe(true);
-    expect(props.some((prop) => prop.kind === 'rock')).toBe(true);
+    expect(props.length).toBeGreaterThan(90);
+    for (const kind of ['tree', 'rock', 'bush', 'barrel', 'crate'] as const) {
+      expect(props.some((prop) => prop.kind === kind)).toBe(true);
+    }
     expect(props.some((prop) => prop.kind === 'bush' && prop.collision === null)).toBe(true);
   });
 
@@ -22,5 +23,13 @@ describe('WorldMap', () => {
     expect(tree?.collision).not.toBeNull();
     expect(tree!.collision!.width).toBeLessThan(tree!.width);
     expect(tree!.collision!.height).toBeLessThan(tree!.height);
+  });
+
+  it('gives solid props collisions while bushes stay passable', () => {
+    const props = createWorldProps();
+    for (const kind of ['rock', 'barrel', 'crate'] as const) {
+      expect(props.find((prop) => prop.kind === kind)?.collision).not.toBeNull();
+    }
+    expect(props.find((prop) => prop.kind === 'bush')?.collision).toBeNull();
   });
 });

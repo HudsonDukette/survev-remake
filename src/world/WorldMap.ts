@@ -1,9 +1,11 @@
 import type { Aabb } from '../core/Collision2D';
 
+export type WorldPropKind = 'tree' | 'rock' | 'bush' | 'barrel' | 'crate';
+
 export interface WorldProp extends Aabb {
   readonly id: number;
-  readonly kind: 'tree' | 'rock' | 'bush';
-  /** Collision is deliberately separate from the visual sprite bounds. */
+  readonly kind: WorldPropKind;
+  /** Collision is deliberately independent from the visible sprite bounds. */
   readonly collision: Aabb | null;
   readonly variant: number;
 }
@@ -23,43 +25,54 @@ function seededRandom(seed: number): () => number {
   };
 }
 
-/** Stable original tree, rock, and bush placements for the prototype's green biome. */
+/** Stable world layout populated with the attributed Suroi environment sprite pack. */
 export function createWorldProps(): readonly WorldProp[] {
   const random = seededRandom(WORLD_SEED);
   const props: WorldProp[] = [];
-  const desiredCounts = { tree: 68, rock: 22, bush: 34 };
-  const total = desiredCounts.tree + desiredCounts.rock + desiredCounts.bush;
+  const desiredCounts = { tree: 48, rock: 23, bush: 28, barrel: 5, crate: 7 };
+  const total = Object.values(desiredCounts).reduce((sum, count) => sum + count, 0);
   let attempts = 0;
 
-  while (props.length < total && attempts < 5000) {
+  while (props.length < total && attempts < 6000) {
     attempts += 1;
     const next = props.length;
-    const kind: WorldProp['kind'] =
+    const kind: WorldPropKind =
       next < desiredCounts.tree ? 'tree'
         : next < desiredCounts.tree + desiredCounts.rock ? 'rock'
-          : 'bush';
+          : next < desiredCounts.tree + desiredCounts.rock + desiredCounts.bush ? 'bush'
+            : next < desiredCounts.tree + desiredCounts.rock + desiredCounts.bush + desiredCounts.barrel ? 'barrel'
+              : 'crate';
 
     const width = kind === 'tree'
-      ? 34 + Math.floor(random() * 13)
+      ? 52 + Math.floor(random() * 13)
       : kind === 'rock'
-        ? 18 + Math.floor(random() * 12)
-        : 19 + Math.floor(random() * 14);
+        ? 23 + Math.floor(random() * 11)
+        : kind === 'bush'
+          ? 26 + Math.floor(random() * 10)
+          : kind === 'barrel'
+            ? 21 + Math.floor(random() * 5)
+            : 25 + Math.floor(random() * 7);
     const height = kind === 'tree'
-      ? width * (0.82 + random() * 0.22)
+      ? width * (0.92 + random() * 0.12)
       : kind === 'rock'
-        ? width * (0.68 + random() * 0.35)
-        : width * (0.65 + random() * 0.3);
+        ? width * (0.72 + random() * 0.28)
+        : kind === 'bush'
+          ? width * (0.85 + random() * 0.15)
+          : width * (0.92 + random() * 0.08);
     const x = Math.round(((random() * 2 - 1) * WORLD_EXTENT) / 8) * 8;
     const y = Math.round(((random() * 2 - 1) * WORLD_EXTENT) / 8) * 8;
     const centerX = x + width / 2;
     const centerY = y + height / 2;
     if (Math.hypot(centerX, centerY) < SPAWN_CLEAR_RADIUS) continue;
 
-    const collision: Aabb | null = kind === 'tree'
-      ? { x: centerX - 5, y: y + height * 0.55, width: 10, height: 11 }
-      : kind === 'rock'
-        ? { x: x + width * 0.13, y: y + height * 0.15, width: width * 0.74, height: height * 0.7 }
-        : null;
+    const collision: Aabb | null =
+      kind === 'tree'
+        ? { x: centerX - 5, y: y + height * 0.65, width: 10, height: 11 }
+        : kind === 'rock'
+          ? { x: x + width * 0.13, y: y + height * 0.15, width: width * 0.74, height: height * 0.7 }
+          : kind === 'bush'
+            ? null
+            : { x: x + width * 0.12, y: y + height * 0.13, width: width * 0.76, height: height * 0.76 };
 
     const candidate: WorldProp = {
       id: props.length,
@@ -69,7 +82,7 @@ export function createWorldProps(): readonly WorldProp[] {
       width,
       height,
       collision,
-      variant: Math.floor(random() * 4),
+      variant: Math.floor(random() * 5),
     };
     const overlaps = props.some((prop) =>
       candidate.x < prop.x + prop.width + 16 &&
