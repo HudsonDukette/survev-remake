@@ -4,47 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#80af49" />
-  <meta name="description" content="Island Royale — a top-down island exploration game with a classic .io survival feel." />
+  <meta name="description" content="Island Royale — an endless top-down island survival game." />
   <title>Island Royale</title>
 </head>
 <body>
-  <div id="app">
-    <div id="game-shell">
-      <canvas id="game-canvas" aria-label="Island Royale game view"></canvas>
-      <div id="hud">
-        <div class="hud-pill"><span class="status-dot"></span><span id="status" aria-live="polite">LOADING ISLAND</span></div>
-        <div class="hud-help">WASD / ARROWS TO MOVE <span class="hud-separator">•</span> EXPLORE THE ISLAND</div>
-        <div class="hud-right">
-          <div class="map-title">ISLAND MAP</div>
-          <canvas id="minimap" width="180" height="180" aria-label="Minimap showing island and player position"></canvas>
-          <div class="map-caption">SOLO EXPLORATION</div>
-        </div>
+<div id="app">
+  <div id="game-shell">
+    <canvas id="game-canvas" aria-label="Island Royale game view"></canvas>
+    <div id="hud">
+      <div class="hud-pill"><span class="status-dot"></span><span id="status" aria-live="polite">LOADING ISLAND</span></div>
+      <div class="hud-help">WASD MOVE <b>·</b> SPACE PULSE <b>·</b> E SUPPLIES</div>
+      <div class="hud-right">
+        <div class="map-title">ISLAND MAP</div>
+        <canvas id="minimap" width="220" height="220" aria-label="Minimap showing island, supplies, zombies, and player position"></canvas>
+        <div class="map-caption">EXPLORE · SCAVENGE · SURVIVE</div>
       </div>
-      <section id="start-screen" aria-labelledby="menu-title">
-        <div class="menu-layout">
-          <div class="menu-main">
-            <div class="menu-kicker">Island survival · 0.3</div>
-            <h1 id="menu-title">ISLAND<br /><span>ROYALE</span></h1>
-            <p class="menu-subtitle">Find your route across a wild island, explore scattered cabins, and follow the river inland.</p>
-            <div class="menu-actions">
-              <button class="menu-button" id="play-button" type="button">PLAY SOLO &nbsp; ›</button>
-              <button class="menu-button secondary" id="how-to-button" type="button" aria-expanded="false" aria-controls="how-to-panel">HOW TO PLAY</button>
-            </div>
-            <p class="menu-footnote">Exploration build. Match rules, matchmaking, and online play are still in development.</p>
-          </div>
-          <aside class="menu-side" aria-label="Island field notes">
-            <p class="side-label">Island guide</p>
-            <div class="field-note"><span class="field-note-mark"></span><div><strong>Look for shelter</strong><span>Small cabins are scattered through the trees.</span></div></div>
-            <div class="field-note"><span class="field-note-mark"></span><div><strong>Follow the river</strong><span>The river cuts across the island toward the coast.</span></div></div>
-            <div class="field-note"><span class="field-note-mark"></span><div><strong>Check your map</strong><span>Your position is marked in the upper-right corner.</span></div></div>
-            <div id="how-to-panel" hidden><strong>Controls</strong><br />W A S D or the arrow keys to move. Walk through the open cabin doorways and around trees, rocks, and other solid objects. The camera follows your character.</div>
-            <div class="menu-build"><span>Island Royale</span><span>Exploration build</span></div>
-          </aside>
-        </div>
-      </section>
     </div>
-    <section id="startup-error" hidden><h1>Island could not load</h1><p id="startup-error-message"></p><p>Open the browser console for details.</p></section>
+    <section id="survival-panel" aria-label="Player status">
+      <div class="survival-topline"><span>FIELD STATUS</span><span id="time-value">00:00</span></div>
+      <div class="bar-label"><span>HEALTH</span><strong id="health-value">100</strong></div>
+      <div class="meter"><span id="health-fill" class="meter-fill health-meter"></span></div>
+      <div class="bar-label"><span>SHIELD</span><strong id="shield-value">25</strong></div>
+      <div class="meter"><span id="shield-fill" class="meter-fill shield-meter"></span></div>
+      <div class="survival-stats">
+        <div><strong id="kills-value">0</strong><span>ZOMBIES</span></div>
+        <div><strong id="deaths-value">0</strong><span>REVIVES</span></div>
+        <div><strong id="supplies-value">0</strong><span>SUPPLIES</span></div>
+      </div>
+    </section>
+    <div id="action-hint">SPACE · PULSE ATTACK</div>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+    <div id="death-overlay" hidden><div><strong>OVERRUN</strong><span>BACK ON YOUR FEET IN <b id="death-countdown">2.4s</b></span></div></div>
+    <section id="start-screen" aria-labelledby="menu-title">
+      <div class="menu-layout">
+        <div class="menu-main">
+          <div class="menu-kicker">Endless island survival · 0.4</div>
+          <h1 id="menu-title">ISLAND<br /><span>ROYALE</span></h1>
+          <p class="menu-subtitle">A huge island. Supplies that come back. Zombies that keep coming. Stay alive as long as you can.</p>
+          <div class="menu-actions">
+            <button class="menu-button" id="play-button" type="button">ENTER THE ISLAND &nbsp; ›</button>
+            <button class="menu-button secondary" id="how-to-button" type="button" aria-expanded="false" aria-controls="how-to-panel">HOW TO PLAY</button>
+          </div>
+          <p class="menu-footnote">An endless single-player survival build. Your run continues after a revive.</p>
+        </div>
+        <aside class="menu-side" aria-label="Survival guide">
+          <p class="side-label">Survival guide</p>
+          <div class="field-note"><span class="field-note-mark"></span><div><strong>Keep moving</strong><span>The camera is closer now, and the island is vastly larger.</span></div></div>
+          <div class="field-note"><span class="field-note-mark"></span><div><strong>Pulse zombies</strong><span>Hold SPACE to send out a short-range pulse.</span></div></div>
+          <div class="field-note"><span class="field-note-mark"></span><div><strong>Scavenge supplies</strong><span>Press E near medical kits, shields, and speed boosts.</span></div></div>
+          <div id="how-to-panel" hidden><strong>Controls</strong><br />W A S D or arrow keys move. Hold SPACE to pulse nearby zombies. Press E to use a nearby supply. Medical kits restore health, shields absorb some incoming damage, and boosts briefly increase your speed. Zombies and collected supplies respawn; when health reaches zero, you get back up automatically.</div>
+          <div class="menu-build"><span>Island Royale</span><span>Endless build 0.4</span></div>
+        </aside>
+      </div>
+    </section>
   </div>
-  <script type="module" src="/src/main.ts"></script>
+  <section id="startup-error" hidden><h1>Island could not load</h1><p id="startup-error-message"></p><p>Open the browser console for details.</p></section>
+</div>
+<script type="module" src="/src/main.ts"></script>
 </body>
 </html>

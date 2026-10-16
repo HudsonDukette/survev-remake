@@ -1,31 +1,35 @@
-# Island Royale — top-down island exploration prototype
+# Island Royale — endless island survival
 
-Island Royale is an original browser game inspired by the readable map style and pacing of classic top-down .io survival games. It keeps its own name, code, and generated world layout.
+Island Royale is an original browser-based top-down island survival game built with PixiJS. It uses its own world layout and keeps attribution and GPL-3.0 notices for the selected Suroi environment art in public/assets/suroi/.
+
+## Play
+
+- **WASD / arrow keys:** move
+- **Hold Space:** send a short-range pulse that pushes back and damages nearby zombies
+- **E:** collect the nearby medkit, shield supply, or speed boost
+
+## Current gameplay
+
+- An island with a **7,000-unit radius**, ocean and sand shoreline, a winding river, and a procedurally detailed ground.
+- More than 2,000 trees, rocks, bushes, barrels, crates, and cabins distributed across the island, with clustered settlements to explore.
+- A closer, smoothly following camera and a minimap with the player's location, supply drops, and zombies.
+- 26 roaming zombies that pursue the player, deal non-graphic contact damage, and respawn over time. Defeating them can drop supplies.
+- Hundreds of supply points. Medkits restore health, shield supplies absorb damage, and boosts briefly raise movement speed. Collected supplies respawn at their original locations.
+- An endless run: the player automatically revives after being overrun, while kills and run time continue. Every survival wave strengthens newly respawned zombies.
+- Health/shield meters, kill/revive/supply counters, and an in-game controls guide.
+
+## Development status
+
+This is a playable **single-player survival loop**, not a full online Surviv.io clone yet. Online multiplayer, matchmaking, network-authoritative simulation, and account-based persistence are not implemented.
 
 ## Run locally
 
-Requires Node.js 20.19+ or 22.12+.
-
     npm install
     npm run dev
-
-Use WASD or the arrow keys to move. The camera follows smoothly, movement is collision-aware, and the minimap shows the island, river, cabins, environmental props, and your current position.
-
-## Current features
-
-- A seeded island with grass detail, a sandy coast, ocean, and a winding river.
-- Cabins with visible interiors, segmented wall collisions, and open doorways.
-- Environment art for trees, rocks, bushes, barrels, and crates, with attribution and GPL-3.0 notices in public/assets/suroi/.
-- Depth-sorted environmental props, tree canopy fade, island-edge collision, and a live minimap.
-- Solo exploration menu and controls guide.
-
-## Still in development
-
-This remains an exploration prototype rather than a complete online battle royale. Matchmaking, network play, full match flow, and inventory systems have not been implemented.
 
 ## Checks
 
     npm test
     npm run build
 
-The CI workflow runs the unit tests and production build on pushes to main and pull requests.
+The GitHub Actions CI workflow runs tests and the production build on pushes to main and pull requests.
